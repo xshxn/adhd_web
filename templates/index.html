@@ -3,35 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADHD Support Website</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>ADHD Tools Hub</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
     <header>
-        <h1>Welcome to My ADHD Support Website</h1>
-        <nav>
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('dashboard') }}">Dashboard</a>
-                <a href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-            {% endif %}
-        </nav>
+        <h1>ADHD Tools Hub</h1>
     </header>
-    <main>
-        <section id="tools">
-            <h2>Tools</h2>
-            <!-- Tools content here -->
-        </section>
-        <section id="resources">
-            <h2>Resources</h2>
-            <!-- Resources content here -->
-        </section>
-        <section id="community">
-            <h2>Community</h2>
-            <!-- Community content here -->
-        </section>
-    </main>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <div class="container">
+        <h2>Discover Tools to Enhance Your Focus and Productivity</h2>
+        <div class="tools-grid" id="toolsGrid">
+            <!-- Tool cards will be dynamically added here -->
+        </div>
+    </div>
+    <script src="static/script.js"></script>
 </body>
 </html>

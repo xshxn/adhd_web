@@ -1,22 +1,72 @@
 body {
     font-family: Arial, sans-serif;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f0f0f0;
+    color: #333;
 }
+
 header {
     background-color: #4CAF50;
     color: white;
     text-align: center;
-    padding: 1em;
+    padding: 1rem;
 }
-main {
-    margin: 2em;
+
+h1 {
+    margin: 0;
+    font-size: 2.5rem;
 }
-section {
-    background: white;
-    padding: 1em;
-    margin-bottom: 1em;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
 }
+.tools-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+.tool-card {
+    flex: 0 1 calc(20% - 2rem); /* Adjust the percentage based on how many cards you want per row */
+    min-width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+
+.tool-card:hover {
+    transform: translateY(-5px);
+}
+
+.tool-card h3 {
+    margin-top: 0;
+    color: white;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: white;
+    color: black;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
