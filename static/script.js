@@ -1,10 +1,10 @@
 const tools = [
-    { name: "Pomodoro Timer", description: "Break your work into focused intervals." },
-    { name: "Task Prioritizer", description: "Organize your tasks by importance and urgency." },
-    { name: "Mindfulness App", description: "Practice mindfulness to improve focus." },
-    { name: "Noise-Cancelling Audio", description: "Block out distractions with ambient sounds." },
-    { name: "Visual Schedule Maker", description: "Create visual timetables for better time management." },
-    { name: "Habit Tracker", description: "Build and maintain positive habits." }
+    { name: "Pomodoro Timer", description: "Break your work into focused intervals.", url: "pomodoro" },
+    { name: "Task Prioritizer", description: "Organize your tasks by importance and urgency.", url: "prioritizer" },
+    { name: "Mindfulness App", description: "Practice mindfulness to improve focus.", url: "mindfulness" },
+    { name: "Noise-Cancelling Audio", description: "Block out distractions with ambient sounds.", url: "noisecancelling" },
+    { name: "Visual Schedule Maker", description: "Create visual timetables for better time management.", url: "schedule" },
+    { name: "Habit Tracker", description: "Build and maintain positive habits.", url: "habits" }
 ];
 
 const toolsGrid = document.getElementById('toolsGrid');
@@ -28,9 +28,13 @@ tools.forEach(tool => {
     toolCard.className = 'tool-card';
     toolCard.style.background = getRandomDarkGradient();
     toolCard.innerHTML = `
-        <h3>${tool.name}</h3>
-        <p>${tool.description}</p>
-        <a href="#" class="cta-button">Learn More</a>
+        <div>
+            <h3>${tool.name}</h3>
+            <p>${tool.description}</p>
+        </div>
+        <div>
+            <a href="${tool.url}" class="cta-button" target = "_blank" rel = "noopener noreferrer">Learn More</a>
+        </div>
     `;
     toolsGrid.appendChild(toolCard);
 });

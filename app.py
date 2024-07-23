@@ -46,6 +46,31 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route('/pomodoro')
+def pomodoro():
+    return render_template('pomodoro.html')
+
+@app.route('/prioritizer')
+def prioritizer():
+    return render_template('prioritizer.html')
+
+@app.route('/mindfulness')
+def mindfulness():
+    return render_template('mindfulness.html')
+
+@app.route('/noisecancelling')
+def noisecancelling():
+    return render_template('noisecancelling.html')
+
+@app.route('/schedule')
+def schedule():
+    return render_template('schedule.html')
+
+@app.route('/habits')
+def habits():
+    return render_template('habits.html')
+
+
 if __name__ == '__main__':
 
     with app.app_context():
