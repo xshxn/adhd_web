@@ -3,23 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro</title>
+    <title>Pomodoro Timer</title>
     <link rel="stylesheet" href="static/pomodoro.css">
 </head>
 <body>
-    <div class = "container">
-        <h1>Pomodoro</h1>
-        <div class = "timer">
-            <div id = "timer-display">25:00</div>
-            <div id = "phase-display">Work</div>
-
+    <div class="container">
+        <h1>Pomodoro Timer</h1>
+        <div class="timers">
+            <div class="timer-section">
+                <h2>Work</h2>
+                <div id="work-display">00:00</div>
+                <input type="number" id="work-time" placeholder="Work time (minutes)" min="1" value="25">
+            </div>
+            <div class="timer-section">
+                <h2>Rest</h2>
+                <div id="rest-display">00:00</div>
+                <input type="number" id="rest-time" placeholder="Rest time (minutes)" min="1" value="5">
+            </div>
         </div>
-        <div class = "controls">
-            <input type = "number" id = "work-time" placeholder="Work Time(min)" min="5">
-            <input type="number" id="rest-time" placeholder="Rest time (minutes)" min="1">
-            <button id = "start-btn">Start</button>
-            <button id = "reset-btn">Reset</button>
+        <div class="controls">
+            <button id="start-btn">Start</button>
+            <button id="reset-btn">Reset</button>
         </div>
     </div>
-    <script src = "static/pomodoro.js"></script>
+    <script src="static/pomodoro.js"></script>
 </body>
+</html>

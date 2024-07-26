@@ -16,23 +16,25 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.timer {
-    margin: 2rem 0;
+.timers {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
 }
 
-#timer-display {
-    font-size: 4rem;
+.timer-section {
+    text-align: center;
+}
+
+#work-display, #rest-display {
+    font-size: 2rem;
     font-weight: bold;
-}
-
-#phase-display {
-    font-size: 1.5rem;
-    margin-top: 0.5rem;
+    margin: 0.5rem 0;
 }
 
 .controls {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     gap: 1rem;
 }
 
@@ -51,4 +53,8 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+
+.active {
+    color: #4CAF50;
 }

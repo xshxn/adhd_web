@@ -1,5 +1,5 @@
-const timerDisplay = document.getElementById('timer-display');
-const phaseDisplay = document.getElementById('phase-display');
+const workDisplay = document.getElementById('work-display');
+const restDisplay = document.getElementById('rest-display');
 const workTimeInput = document.getElementById('work-time');
 const restTimeInput = document.getElementById('rest-time');
 const startBtn = document.getElementById('start-btn');
@@ -8,38 +8,55 @@ const resetBtn = document.getElementById('reset-btn');
 let timer;
 let isRunning = false;
 let isWorkPhase = true;
-let timeLeft;
+let secondsLeft;
 
-function updateTimerDisplay() {
-    const minutes = isWorkPhase ? workTimeInput.value : restTimeInput.value;
-    timerDisplay.textContent = formatTime(minutes * 60);
+function updateDisplays() {
+    workDisplay.textContent = formatTime(workTimeInput.value * 60);
+    restDisplay.textContent = formatTime(restTimeInput.value * 60);
+}
+
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
 }
 
 function startTimer() {
     if (isRunning) return;
-
+    
     isRunning = true;
     startBtn.textContent = 'Pause';
 
-    if (!timeLeft) {
-        timeLeft = (isWorkPhase ? workTimeInput.value : restTimeInput.value) * 60;
+    if (secondsLeft === undefined) {
+        secondsLeft = workTimeInput.value * 60;
     }
-    phaseDisplay.textContent = isWorkPhase ? 'Work' : 'Rest';
-
-    updateDisplay();
 
     timer = setInterval(() => {
-        timeLeft--;
-        updateDisplay();
-
-        if (timeLeft === 0) {
-            clearInterval(timer);
-            isWorkPhase = !isWorkPhase;
-            phaseDisplay.textContent = isWorkPhase ? 'Work' : 'Rest';
-            timeLeft = (isWorkPhase ? workTimeInput.value : restTimeInput.value) * 60;
-            startTimer(); // Automatically start the next phase
+        if (secondsLeft > 0) {
+            secondsLeft--;
+            updateActiveDisplay();
+        } else {
+            switchPhase();
         }
     }, 1000);
+}
+
+function switchPhase() {
+    isWorkPhase = !isWorkPhase;
+    secondsLeft = (isWorkPhase ? workTimeInput.value : restTimeInput.value) * 60;
+    updateActiveDisplay();
+}
+
+function updateActiveDisplay() {
+    if (isWorkPhase) {
+        workDisplay.textContent = formatTime(secondsLeft);
+        workDisplay.classList.add('active');
+        restDisplay.classList.remove('active');
+    } else {
+        restDisplay.textContent = formatTime(secondsLeft);
+        restDisplay.classList.add('active');
+        workDisplay.classList.remove('active');
+    }
 }
 
 function pauseTimer() {
@@ -52,20 +69,11 @@ function resetTimer() {
     clearInterval(timer);
     isRunning = false;
     isWorkPhase = true;
+    secondsLeft = undefined;
     startBtn.textContent = 'Start';
-    phaseDisplay.textContent = 'Work';
-    timeLeft = null;
-    updateTimerDisplay();
-}
-
-function updateDisplay() {
-    timerDisplay.textContent = formatTime(timeLeft);
-}
-
-function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    updateDisplays();
+    workDisplay.classList.remove('active');
+    restDisplay.classList.remove('active');
 }
 
 startBtn.addEventListener('click', () => {
@@ -78,10 +86,7 @@ startBtn.addEventListener('click', () => {
 
 resetBtn.addEventListener('click', resetTimer);
 
-// Update timer display when input changes
-workTimeInput.addEventListener('input', updateTimerDisplay);
-restTimeInput.addEventListener('input', updateTimerDisplay);
+workTimeInput.addEventListener('input', updateDisplays);
+restTimeInput.addEventListener('input', updateDisplays);
 
-// Initialize display
-timerDisplay.textContent = '00:00';
-phaseDisplay.textContent = 'Work';
+updateDisplays();
