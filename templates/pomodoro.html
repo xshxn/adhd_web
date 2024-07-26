@@ -4,13 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomodoro</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="static/pomodoro.css">
 </head>
-
 <body>
-    <header>
-        <h3>
-            Pomodoro 
-        </h3>
-    </header>
+    <div class = "container">
+        <h1>Pomodoro</h1>
+        <div class = "timer">
+            <div id = "timer-display">25:00</div>
+            <div id = "phase-display">Work</div>
+
+        </div>
+        <div class = "controls">
+            <input type = "number" id = "work-time" placeholder="Work Time(min)" min="5">
+            <input type="number" id="rest-time" placeholder="Rest time (minutes)" min="1">
+            <button id = "start-btn">Start</button>
+            <button id = "reset-btn">Reset</button>
+        </div>
+    </div>
+    <script src = "static/pomodoro.js"></script>
 </body>

@@ -64,7 +64,7 @@ def send_static(path):
 
 @app.route('/pomodoro')
 def pomodoro():
-    return "Pomodoro Timer Page"
+    return render_template('templates/pomodoro.html')
 
 @app.route('/prioritizer')
 def prioritizer():
