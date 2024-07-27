@@ -1,10 +1,10 @@
-from flask import Flask, render_template, send_from_directory, request, redirect, url_for, flash
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging
-
+from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -45,6 +45,13 @@ def load_user(user_id):
     logger.debug("user_id is None or 'None'")
     return None
 
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    content = db.Column(db.String(200), nullable = False)
+    deadline = db.Column(db.DateTime, nullable = False)
+    completed = db.Column(db.Boolean, default = False)
+
 
 def create_missing_tables():
     inspector = inspect(db.engine)
@@ -67,8 +74,33 @@ def pomodoro():
     return render_template('templates/pomodoro.html')
 
 @app.route('/prioritizer')
+@login_required
 def prioritizer():
-    return "Task Prioritizer Page"
+    return render_template('templates/prioritizer.html')
+
+@app.route('/api/tasks', methods = ['GET', 'POST'])
+@login_required
+def handle_tasks():
+    if request.method == 'POST':
+        content = request.json.get('content')
+        deadline = datetime.strptime(request.json.get('deadline'), '%Y-%m-%d')
+        new_task = Task(user_id = current_user.id, content = content, deadline = deadline)
+        db.session.add(new_task)
+        db.session.commit()
+        return jsonify({"id": new_task.id}), 201
+    else:
+        tasks = Task.query.filter_by(user_id = current_user.id, completed = False).all()
+        return  jsonify([{"id": task.id, "content": task.content, "deadline": task.deadline.strftime('%Y-%m-%d')} for task in tasks]) 
+    
+@app.route('/api/tasks/<int:task_id>', methods=['PUT'])
+@login_required
+def complete_task(task_id):
+    task = Task.query.get_or_404(task_id)
+    if task.user_id != current_user.id:
+        return jsonify({"error": "Unauthorized"}), 403
+    task.completed = True
+    db.session.commit()
+    return "", 204
 
 @app.route('/mindfulness')
 def mindfulness():

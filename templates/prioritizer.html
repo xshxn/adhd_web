@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prioritizer</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <title>Task Prioritizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='prioritizer.css') }}">
 </head>
-
 <body>
-    <header>
-        <h3>
-            Prioritizer 
-        </h3>
-    </header>
+    <div class="container">
+        <h1>Task Prioritizer</h1>
+        <form id="task-form">
+            <input type="text" id="task-content" placeholder="Enter task" required>
+            <input type="date" id="task-deadline" required>
+            <button type="submit">Add Task</button>
+        </form>
+        <div id="task-container"></div>
+    </div>
+    <script src="{{ url_for('static', filename='prioritizer.js') }}"></script>
 </body>
+</html>
