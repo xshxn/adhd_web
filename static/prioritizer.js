@@ -39,35 +39,69 @@ document.addEventListener('DOMContentLoaded', function() {
         const taskEl = document.createElement('div');
         taskEl.classList.add('task');
         taskEl.textContent = task.content;
-        
+
         // Set the deadline as a data attribute for the hover effect
         taskEl.setAttribute('data-deadline', task.deadline);
-    
+
         const today = new Date();
         const deadlineDate = new Date(task.deadline);
         const daysUntilDeadline = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
-        
+
         let fontSize;
         if (daysUntilDeadline < 0) {
             // Task is overdue
             taskEl.classList.add('overdue');
-            fontSize = 40; // Even bigger than the closest approaching task
+            fontSize = 40; // Larger font size for overdue tasks
         } else {
             fontSize = Math.max(16, Math.min(36, 36 - daysUntilDeadline));
         }
-        
+
         taskEl.style.fontSize = `${fontSize}px`;
-    
-        const position = getTaskPosition(taskCount);
+
+        // Get position and ensure no overlap
+        let position;
+        let attempts = 0;
+        do {
+            position = getTaskPosition(taskCount);
+            attempts++;
+        } while (isOverlapping(taskEl, position) && attempts < 100); // Limit attempts to avoid infinite loops
+
         taskEl.style.left = `${position.x}px`;
         taskEl.style.top = `${position.y}px`;
-    
-        taskEl.addEventListener('click', function() {
+
+        taskEl.addEventListener('click', function () {
             completeTask(task.id, taskEl);
         });
-    
+
         taskContainer.appendChild(taskEl);
         taskCount++;
+    }
+
+    function isOverlapping(taskEl, position) {
+        taskEl.style.left = `${position.x}px`;
+        taskEl.style.top = `${position.y}px`;
+        taskContainer.appendChild(taskEl);
+
+        const taskRect = taskEl.getBoundingClientRect();
+        const containerRect = taskContainer.getBoundingClientRect();
+        taskContainer.removeChild(taskEl);
+
+        // Check if the task goes out of the container bounds
+        if (taskRect.left < containerRect.left || taskRect.right > containerRect.right ||
+            taskRect.top < containerRect.top || taskRect.bottom > containerRect.bottom) {
+            return true;
+        }
+
+        // Check if the task overlaps with any existing tasks
+        const tasks = document.querySelectorAll('.task');
+        for (let task of tasks) {
+            const rect = task.getBoundingClientRect();
+            if (taskRect.left < rect.right && taskRect.right > rect.left &&
+                taskRect.top < rect.bottom && taskRect.bottom > rect.top) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function getTaskPosition(index) {
@@ -83,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Pseudo-random positions for subsequent tasks
             const angle = (index * 137.5) % 360; // Golden angle
-            const radius = Math.min(containerWidth, containerHeight) * 0.4 * (index % 3 + 1) / 3;
+            const radius = Math.min(containerWidth, containerHeight) * 0.7 * (index % 3 + 1) / 3;
             return {
                 x: containerWidth / 2 + radius * Math.cos(angle * Math.PI / 180) - 100,
                 y: containerHeight / 2 + radius * Math.sin(angle * Math.PI / 180) - 20

@@ -5,45 +5,82 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging
 from datetime import datetime
+from flask_dance.contrib.google import make_google_blueprint, google
+from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
+from flask_dance.consumer import oauth_authorized
+from sqlalchemy.orm.exc import NoResultFound
+from dotenv import load_dotenv
+import os
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+load_dotenv()
+
+
 
 app = Flask(__name__, static_folder='static', template_folder='.')
 
-app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://eshan:eshansqlpassword@localhost/adhd'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'google.login'
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(100), nullable = False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
 
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+class OAuth(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+    provider = db.Column(db.String(50), primary_key=True)
+    token = db.Column(db.String(256), nullable=False)
+    user = db.relationship('User', backref=db.backref('oauth', lazy=True))
+
+blueprint = make_google_blueprint(
+    client_id=os.getenv('GOOGLE_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+    scope=["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile", "openid"],
+    storage=SQLAlchemyStorage(OAuth, db.session, user=current_user)
+)
+app.register_blueprint(blueprint, url_prefix="/login")
 
 @login_manager.user_loader
 def load_user(user_id):
-    logger.debug(f"load_user called with user_id: {user_id}")
-    if user_id is not None and user_id != 'None':
-        try:
-            user = User.query.get(int(user_id))
-            logger.debug(f"User loaded: {user}")
-            return user
-        except ValueError:
-            logger.error(f"ValueError: invalid user_id: {user_id}")
-            return None
-    logger.debug("user_id is None or 'None'")
-    return None
+    return User.query.get(int(user_id))
+
+@oauth_authorized.connect_via(blueprint)
+def google_logged_in(blueprint, token):
+    if not token:
+        flash("Failed to log in with Google.", category="error")
+        return False
+
+    resp = google.get("/oauth2/v1/userinfo")
+    if not resp.ok:
+        flash("Failed to fetch user info from Google.", category="error")
+        return False
+
+    google_info = resp.json()
+    google_user_id = google_info["id"]
+
+    query = OAuth.query.filter_by(provider=blueprint.name, token=google_user_id)
+    try:
+        oauth = query.one()
+    except NoResultFound:
+        oauth = OAuth(provider=blueprint.name, token=google_user_id)
+
+    if oauth.user:
+        login_user(oauth.user)
+        flash("Successfully signed in with Google.")
+    else:
+        user = User(email=google_info["email"], name=google_info["name"])
+        oauth.user = user
+        db.session.add_all([user, oauth])
+        db.session.commit()
+        login_user(user)
+        flash("Successfully signed in with Google.")
+
+    return False
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -118,39 +155,7 @@ def schedule():
 def habits():
     return "Habit Tracker Page"
 
-@app.route('/register', methods = ['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        password = request.form.get('password')
 
-        user = User.query.filter_by(email = email).first()
-        if user:
-            flash('Account with email already exists')
-            return redirect(url_for('login'))
-        
-        new_user = User(name = name, email = email)
-        new_user.set_password(password)
-        db.session.add(new_user)
-        db.session.commit()
-
-        login_user(new_user)
-        flash("Succesfully Registered, you are now logged in")
-        return redirect(url_for('home'))
-    return render_template('templates/register.html')
-
-@app.route('/login', methods = ['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        user = User.query.filter_by(email=email).first()
-        if user and user.check_password(password):
-            login_user(user)
-            return redirect(url_for('home'))
-        flash('Invalid email or password')
-    return render_template('templates/login.html')
 
 @app.route('/logout')
 @login_required
