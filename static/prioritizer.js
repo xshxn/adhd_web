@@ -51,9 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (daysUntilDeadline < 0) {
             // Task is overdue
             taskEl.classList.add('overdue');
-            fontSize = 40; // Larger font size for overdue tasks
+            fontSize = 42; // Larger font size for overdue tasks
         } else {
-            fontSize = Math.max(16, Math.min(36, 36 - daysUntilDeadline));
+            fontSize = Math.max(12, Math.min(38, 38 - daysUntilDeadline));
         }
 
         taskEl.style.fontSize = `${fontSize}px`;
