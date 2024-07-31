@@ -54,11 +54,23 @@ header {
     background-color: #d32f2f;
 }
 
-#habit-image {
-    display: block;
+.habit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15px, 1fr));
+    gap: 2px;
+    max-width: 300px;
     margin: 20px auto;
-    border: 1px solid #ddd;
-    max-width: 100%;
-    height: auto;
 }
+.day-square {
+    aspect-ratio: 1/1;
+    border: 1px solid #000;
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+}
+
+.day-square:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    z-index: 1;
+}
+
 

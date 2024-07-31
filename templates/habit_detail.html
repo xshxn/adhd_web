@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='habits.css') }}">
     <title>{{ habit.name }}</title>
-    <link rel="stylesheet" href="/static/habits.css">
 </head>
 <body>
     <h1>{{ habit.name }}</h1>
     <p>Target: <span id="target-date">{{ habit.target.strftime('%Y-%m-%d') }}</span></p>
-    <img id="habit-image" src="{{ url_for('static', filename=habit.image_path) }}" alt="{{ habit.name }}">
+    <p>Created: <span id="creation-date">{{ habit.creation_date.strftime('%Y-%m-%d') }}</span></p>
+    <div id="habit-grid" class="habit-grid"></div>
     <button id="miss-day-btn">Miss a Day</button>
 
     <script src="/static/habit_detail.js"></script>

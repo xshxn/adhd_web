@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
 from flask_dance.consumer import oauth_authorized
@@ -104,7 +104,7 @@ class Habit(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
     name = db.Column(db.String(200), nullable = False)
     target = db.Column(db.DateTime, nullable = False)
-    image_path = db.Column(db.String(200), nullable = False)
+    creation_date = db.Column(db.DateTime, nullable=False, default = datetime.utcnow)
 
 
 def create_missing_tables():
@@ -179,28 +179,21 @@ def handle_habits():
     if request.method == 'POST':
         name = request.json.get('name')
         target = datetime.strptime(request.json.get('target'), '%Y-%m-%d')
-        days_until_target = (target - datetime.now()).days
 
-        template_path = random.choice(HABIT_IMAGES)
-
-        with Image.open(template_path) as img:
-            img = img.convert('L')
-            img = img.resize((max(100, days_until_target), 100))
-
-            img_path = f'static/habit_images/{current_user.id}_{name.replace(" ", "_")}.png'
-            full_path = os.path.join(app.static_folder, img_path)
-            os.makedirs(os.path.dirname(full_path), exist_ok=True)
-            img.save(full_path)
-
-            print(f"Image saved at: {img_path}")
-
-        new_habit = Habit(user_id=current_user.id, name=name, target=target, image_path=img_path)
+        new_habit = Habit(user_id=current_user.id, name=name, target=target, creation_date = datetime.utcnow())
         db.session.add(new_habit)
         db.session.commit()
         return jsonify({"id": new_habit.id}), 201
     else:
         habits = Habit.query.filter_by(user_id = current_user.id).all()
-        return jsonify([{"id": habit.id, "name": habit.name, "target": habit.target.strftime('%Y-%m-%d'), "image_path": habit.image_path} for habit in habits])
+        return jsonify([
+            {
+                "id": habit.id,
+                "name": habit.name,
+                "target": habit.target.strftime('%Y-%m-%d'),
+                "creation_date": habit.creation_date.strftime('%Y-%m-%d')
+            } for habit in habits
+        ])
     
 @app.route('/habit/<int:habit_id>')
 @login_required
@@ -208,7 +201,7 @@ def habit_detail(habit_id):
     habit = Habit.query.get_or_404(habit_id)
     if habit.user_id != current_user.id:
         abort(403)
-    return render_template('templates/habit_detail.html', habit = habit)
+    return render_template('templates/habit_detail.html', habit=habit)
 
 @app.route('/api/habit/<int:habit_id>/miss_day', methods=['POST'])
 @login_required
