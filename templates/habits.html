@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Habits</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="static/habits.css">
 </head>
-
 <body>
     <header>
-        <h3>
-            Habits 
-        </h3>
+        <h3>Habits</h3>
     </header>
+    <form id="habits-form">
+        <input type="text" id="habit-name" placeholder="Enter habit" required>
+        <input type="date" id="habit-target" required>
+        <button type="submit">Add Habit</button>
+    </form>
+    <div id="habits-list"></div>
+
+    <script src="static/habits.js"></script>
 </body>
+</html>

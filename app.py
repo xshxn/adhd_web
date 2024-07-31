@@ -1,19 +1,29 @@
-from flask import Flask, render_template, send_from_directory, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for, flash, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
+from sqlalchemy.orm import Session
+from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-import logging
 from datetime import datetime
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
 from flask_dance.consumer import oauth_authorized
-from sqlalchemy.orm.exc import NoResultFound
 from dotenv import load_dotenv
 import os
+from PIL import Image
+import random
 
 load_dotenv()
+PIXEL_SIZE = 10
 
+HABIT_IMAGES = [
+    "static/habit_templates/circle.png",
+    "static/habit_templates/star.png",
+    "static/habit_templates/heart.png",
+    "static/habit_templates/cloud.png",
+    "static/habit_templates/tree.png",
+]
 
 
 app = Flask(__name__, static_folder='static', template_folder='.')
@@ -89,6 +99,13 @@ class Task(db.Model):
     deadline = db.Column(db.DateTime, nullable = False)
     completed = db.Column(db.Boolean, default = False)
 
+class Habit(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    name = db.Column(db.String(200), nullable = False)
+    target = db.Column(db.DateTime, nullable = False)
+    image_path = db.Column(db.String(200), nullable = False)
+
 
 def create_missing_tables():
     inspector = inspect(db.engine)
@@ -152,10 +169,60 @@ def schedule():
     return "Visual Schedule Maker Page"
 
 @app.route('/habits')
+@login_required
 def habits():
-    return "Habit Tracker Page"
+    return render_template('templates/habits.html')
 
+@app.route('/api/habits', methods = ['GET', 'POST'])
+@login_required
+def handle_habits():
+    if request.method == 'POST':
+        name = request.json.get('name')
+        target = datetime.strptime(request.json.get('target'), '%Y-%m-%d')
+        days_until_target = (target - datetime.now()).days
 
+        template_path = random.choice(HABIT_IMAGES)
+
+        with Image.open(template_path) as img:
+            img = img.convert('L')
+            img = img.resize((max(100, days_until_target), 100))
+
+            img_path = f'static/habit_images/{current_user.id}_{name.replace(" ", "_")}.png'
+            full_path = os.path.join(app.static_folder, img_path)
+            os.makedirs(os.path.dirname(full_path), exist_ok=True)
+            img.save(full_path)
+
+            print(f"Image saved at: {img_path}")
+
+        new_habit = Habit(user_id=current_user.id, name=name, target=target, image_path=img_path)
+        db.session.add(new_habit)
+        db.session.commit()
+        return jsonify({"id": new_habit.id}), 201
+    else:
+        habits = Habit.query.filter_by(user_id = current_user.id).all()
+        return jsonify([{"id": habit.id, "name": habit.name, "target": habit.target.strftime('%Y-%m-%d'), "image_path": habit.image_path} for habit in habits])
+    
+@app.route('/habit/<int:habit_id>')
+@login_required
+def habit_detail(habit_id):
+    habit = Habit.query.get_or_404(habit_id)
+    if habit.user_id != current_user.id:
+        abort(403)
+    return render_template('templates/habit_detail.html', habit = habit)
+
+@app.route('/api/habit/<int:habit_id>/miss_day', methods=['POST'])
+@login_required
+def miss_day(habit_id):
+    habit = Habit.query.get_or_404(habit_id)
+    if habit.user_id != current_user.id:
+        abort(403)
+    habit.target = habit.target + timedelta(days=1)
+    db.session.commit()
+    return jsonify({"new_target": habit.target.strftime('%Y-%m-%d')}), 200
+
+@app.route('/static/habit_images/<path:filename>')
+def serve_habit_image(filename):
+    return send_from_directory('static/habit_images', filename)
 
 @app.route('/logout')
 @login_required

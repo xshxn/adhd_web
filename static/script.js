@@ -33,7 +33,7 @@ tools.forEach(tool => {
             <p>${tool.description}</p>
         </div>
         <div>
-            <a href="${tool.url}" class="cta-button" target = "_blank" rel = "noopener noreferrer">Learn More</a>
+            <a href="${tool.url}" class="cta-button" target = "_blank" rel = "noopener noreferrer">Try</a>
         </div>
     `;
     toolsGrid.appendChild(toolCard);
