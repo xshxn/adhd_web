@@ -162,7 +162,7 @@ def mindfulness():
 
 @app.route('/noisecancelling')
 def noisecancelling():
-    return "Noise-Cancelling Audio Page"
+    return render_template('templates/noisecancelling.html')
 
 @app.route('/schedule')
 def schedule():

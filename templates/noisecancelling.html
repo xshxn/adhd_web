@@ -3,14 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noise Cancelling</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <title>Ambient Sounds</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='noisecancelling.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-
 <body>
-    <header>
-        <h3>
-            Noise Cancelling 
-        </h3>
-    </header>
+    <div class="container">
+        <h1>Ambient Sounds</h1>
+        <div class="sound-grid">
+            <div class="sound-card" data-sound="rain.mp3">
+                <i class="fas fa-cloud-rain"></i>
+                <span>Rain</span>
+            </div>
+            <div class="sound-card" data-sound="forest.mp3">
+                <i class="fas fa-tree"></i>
+                <span>Forest</span>
+            </div>
+            <div class="sound-card" data-sound="ocean.mp3">
+                <i class="fas fa-water"></i>
+                <span>Ocean</span>
+            </div>
+            <div class="sound-card" data-sound="fire.mp3">
+                <i class="fas fa-fire"></i>
+                <span>Fire</span>
+            </div>
+        </div>
+        <div class="player">
+            <div class="player-info">
+                <span id="current-sound">Select a sound</span>
+            </div>
+            <div class="controls">
+                <button id="play-pause"><i class="fas fa-play"></i></button>
+                <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+                <button id="loop"><i class="fas fa-redo"></i></button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='noisecancelling.js') }}"></script>
 </body>
+</html>
