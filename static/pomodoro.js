@@ -91,7 +91,7 @@ restTimeInput.addEventListener('input', updateDisplays);
 
 updateDisplays();
 
-const container = document.querySelectorAll('.container')
+container = document.querySelectorAll('.container')
 
 function getRandomDarkColor() {
     // Generate a random hue
@@ -105,7 +105,7 @@ function getRandomDarkGradient() {
     const color1 = getRandomDarkColor();
     const color2 = getRandomDarkColor();
     return `linear-gradient(135deg, ${color1}, ${color2})`;
-}
+}   
 
 container.forEach(cont =>{
     cont.style.background = getRandomDarkGradient();

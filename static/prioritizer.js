@@ -51,9 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (daysUntilDeadline < 0) {
             // Task is overdue
             taskEl.classList.add('overdue');
-            fontSize = 42; // Larger font size for overdue tasks
+            fontSize = 44; // Larger font size for overdue tasks
         } else {
-            fontSize = Math.max(12, Math.min(38, 38 - daysUntilDeadline));
+            fontSize = Math.max(10, Math.min(40, 40 - daysUntilDeadline));
         }
 
         taskEl.style.fontSize = `${fontSize}px`;
@@ -133,3 +133,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 });
+
+const container = document.querySelectorAll('#task-form')
+
+function getRandomDarkColor() {
+    // Generate a random hue
+    const hue = Math.floor(Math.random() * 360);
+    // Use a low lightness value to ensure dark colors
+    const lightness = Math.floor(Math.random() * 20) + 10; // 10-30% lightness
+    return `hsl(${hue}, 70%, ${lightness}%)`;
+}
+
+function getRandomDarkGradient() {
+    const color1 = getRandomDarkColor();
+    const color2 = getRandomDarkColor();
+    return `linear-gradient(135deg, ${color1}, ${color2})`;
+}
+
+container.forEach(cont =>{
+    cont.style.background = getRandomDarkGradient();
+})
