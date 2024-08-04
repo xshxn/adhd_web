@@ -57,7 +57,7 @@ h1 {
 
 #task-container {
     position: relative;
-    min-height: calc(100vh - 200px); /* Adjust based on your needs */
+    min-height: calc(100vh - 150px);
     overflow: visible;
 }
 
