@@ -5,7 +5,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: #f5f5dc;
 }
 
 .container {
@@ -14,6 +14,7 @@ body {
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: white;
 }
 
 .timers {
@@ -57,4 +58,11 @@ button:hover {
 
 .active {
     color: #4CAF50;
+}
+
+input {
+    border-radius: 10px; /* Adjust the value to make the corners more or less rounded */
+    padding: 10px;
+    border: 1px solid black;
+    font-size: 16px;
 }

@@ -77,5 +77,5 @@ h2 {
 }
 
 h2:hover{
-    scale: 1.25;
+    transform: translateY(-5px);
 }
