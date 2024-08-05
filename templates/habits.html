@@ -7,15 +7,28 @@
     <link rel="stylesheet" href="static/habits.css">
 </head>
 <body>
-    <header>
-        <h3>Habits</h3>
-    </header>
+    <nav class="navbar">
+        <div class="nav-logo">Habits</div>
+        <ul class="nav-links">
+            <li><a href="/" class="nav-item">Home</a></li>
+            <li><a href="/prioritizer" class="nav-item">Prioritizer</a></li>
+            <li><a href="/pomodoro" class="nav-item">Pomodoro</a></li>
+            <li><a href="/noisecancelling" class="nav-item">Noise Cancelling</a></li>
+        </ul>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+    <div class="content">
+        <div id="habits-list"></div>
+    </div>
     <form id="habits-form">
         <input type="text" id="habit-name" placeholder="Enter habit" required>
         <input type="date" id="habit-target" required>
         <button type="submit">Add Habit</button>
     </form>
-    <div id="habits-list"></div>
 
     <script src="static/habits.js"></script>
 </body>

@@ -20,7 +20,7 @@ function updateGrid() {
     for (let i = 0; i < totalDays; i++) {
         const square = document.createElement('div');
         square.className = 'day-square';
-        square.style.backgroundColor = i < daysElapsed ? 'green' : 'red';
+        square.style.backgroundColor = i < daysElapsed ? '#2ecc71' : '#e74c3c';
         
         // Add tooltip
         const date = new Date(creationDate);
@@ -42,6 +42,5 @@ missButton.addEventListener('click', function() {
         updateGrid();
     });
 });
-
 
 updateGrid();

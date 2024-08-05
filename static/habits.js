@@ -27,7 +27,10 @@ function loadHabits() {
         habits.forEach(habit => {
             const card = document.createElement('div');
             card.className = 'habit-card';
-            card.textContent = `${habit.name} - Target: ${habit.target}`;
+            card.innerHTML = `
+                <h3>${habit.name}</h3>
+                <p>Target: ${habit.target}</p>
+            `;
             card.addEventListener('click', () => {
                 window.location.href = `/habit/${habit.id}`;
             });
@@ -38,3 +41,25 @@ function loadHabits() {
 
 loadHabits();
 
+// Navigation functionality
+const navSlide = () => {
+    const burger = document.querySelector('.burger');
+    const nav = document.querySelector('.nav-links');
+    const navLinks = document.querySelectorAll('.nav-links li');
+
+    burger.addEventListener('click', () => {
+        nav.classList.toggle('nav-active');
+
+        navLinks.forEach((link, index) => {
+            if (link.style.animation) {
+                link.style.animation = '';
+            } else {
+                link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
+            }
+        });
+
+        burger.classList.toggle('toggle');
+    });
+}
+
+navSlide();

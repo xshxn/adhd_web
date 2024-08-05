@@ -7,12 +7,17 @@
     <title>{{ habit.name }}</title>
 </head>
 <body>
-    <h1>{{ habit.name }}</h1>
-    <p>Target: <span id="target-date">{{ habit.target.strftime('%Y-%m-%d') }}</span></p>
-    <p>Created: <span id="creation-date">{{ habit.creation_date.strftime('%Y-%m-%d') }}</span></p>
-    <div id="habit-grid" class="habit-grid"></div>
-    <button id="miss-day-btn">Miss a Day</button>
+    <div class="content">
+        <div class="habit-details">
+            <a href="/habits" class="back-button">&larr; Back to Habits</a>
+            <h1>{{ habit.name }}</h1>
+            <p>Target: <span id="target-date">{{ habit.target.strftime('%Y-%m-%d') }}</span></p>
+            <p>Created: <span id="creation-date">{{ habit.creation_date.strftime('%Y-%m-%d') }}</span></p>
+            <div id="habit-grid" class="habit-grid"></div>
+            <button id="miss-day-btn">Miss a Day</button>
+        </div>
+    </div>
 
-    <script src="/static/habit_detail.js"></script>
+    <script src="{{ url_for('static', filename='habit_detail.js') }}"></script>
 </body>
 </html>
