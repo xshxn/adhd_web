@@ -1,7 +1,7 @@
 const tools = [
     { name: "Pomodoro Timer", description: "Break your work into focused intervals.", url: "pomodoro" },
     { name: "Task Prioritizer", description: "Organize your tasks by importance and urgency.", url: "prioritizer" },
-    { name: "Noise-Cancelling Audio", description: "Block out distractions with ambient sounds.", url: "noisecancelling" },
+    { name: "White Noise", description: "Block out distractions with ambient sounds.", url: "noisecancelling" },
     { name: "Habit Tracker", description: "Build and maintain positive habits.", url: "habits" }
 ];
 

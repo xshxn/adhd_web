@@ -93,19 +93,6 @@ updateDisplays();
 
 container = document.querySelectorAll('.container')
 
-function getRandomDarkColor() {
-    // Generate a random hue
-    const hue = Math.floor(Math.random() * 360);
-    // Use a low lightness value to ensure dark colors
-    const lightness = Math.floor(Math.random() * 20) + 10; // 10-30% lightness
-    return `hsl(${hue}, 70%, ${lightness}%)`;
-}
-
-function getRandomDarkGradient() {
-    const color1 = getRandomDarkColor();
-    const color2 = getRandomDarkColor();
-    return `linear-gradient(135deg, ${color1}, ${color2})`;
-}   
 
 container.forEach(cont => {
     cont.style.background = 'rgba(255, 255, 255, 0.9)';
