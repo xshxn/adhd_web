@@ -7,8 +7,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='prioritizer.css') }}">
 </head>
 <body>
+    <nav class = "navbar">
+        <div class = "nav-logo">Prioritizer</div>
+        <ul class = "nav-links">
+            <li><a href="/" class="nav-item">Home</a></li>
+            <li><a href="/pomodoro" class="nav-item">Pomodoro</a></li>
+            <li><a href="/habits" class="nav-item">Habit Tracker</a></li>
+            <li><a href = "/noisecancelling" class = "nav-item">Noise Cancelling</a></li>
+        </ul>
+        <div class = "burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
     <div class="container">
-        <h1>Task Prioritizer</h1>
         <form id="task-form">
             <input type="text" id="task-content" placeholder="Enter task" required>
             <input type="date" id="task-deadline" required>
