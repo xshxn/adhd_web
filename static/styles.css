@@ -79,3 +79,11 @@ h2 {
 h2:hover{
     transform: translateY(-5px);
 }
+
+#text {
+    text-align: center;
+}
+
+#text:hover{
+    transform: scale(2);
+}
