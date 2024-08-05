@@ -4,7 +4,6 @@ from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
@@ -156,17 +155,9 @@ def complete_task(task_id):
     db.session.commit()
     return "", 204
 
-@app.route('/mindfulness')
-def mindfulness():
-    return "Mindfulness App Page"
-
 @app.route('/noisecancelling')
 def noisecancelling():
     return render_template('templates/noisecancelling.html')
-
-@app.route('/schedule')
-def schedule():
-    return "Visual Schedule Maker Page"
 
 @app.route('/habits')
 @login_required
