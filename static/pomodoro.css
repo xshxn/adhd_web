@@ -64,7 +64,7 @@ button:hover {
 }
 
 input {
-    border-radius: 10px; /* Adjust the value to make the corners more or less rounded */
+    border-radius: 10px; 
     padding: 10px;
     border: 1px solid black;
     font-size: 16px;
@@ -135,7 +135,7 @@ input {
     }
 }
 
-@media screen and (max-width: 992px) { /* Added new breakpoint */
+@media screen and (max-width: 992px) { 
     .nav-links {
         width: 85%;
     }

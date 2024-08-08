@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let audio = new Audio();
     let isPlaying = false;
     let currentSound = '';
-    let activeCard = null; // Keep track of the currently active sound card
+    let activeCard = null; 
 
     soundCards.forEach(card => {
         card.addEventListener('click', () => {
@@ -83,10 +83,8 @@ const navSlide = () => {
     const navLinks = document.querySelectorAll('.nav-links li');
 
     burger.addEventListener('click', () => {
-        // Toggle Nav
         nav.classList.toggle('nav-active');
 
-        // Animate Links
         navLinks.forEach((link, index) => {
             if (link.style.animation) {
                 link.style.animation = '';
@@ -95,7 +93,6 @@ const navSlide = () => {
             }
         });
 
-        // Burger Animation
         burger.classList.toggle('toggle');
     });
 }

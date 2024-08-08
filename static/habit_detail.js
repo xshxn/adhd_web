@@ -11,9 +11,8 @@ function updateGrid() {
     const totalDays = Math.ceil((targetDate - creationDate) / (1000 * 60 * 60 * 24));
     const daysElapsed = Math.ceil((today - creationDate) / (1000 * 60 * 60 * 24));
 
-    habitGrid.innerHTML = ''; // Clear existing squares
+    habitGrid.innerHTML = ''
 
-    // Calculate grid dimensions
     const gridWidth = Math.ceil(Math.sqrt(totalDays));
     habitGrid.style.gridTemplateColumns = `repeat(${gridWidth}, 1fr)`;
 
@@ -22,7 +21,6 @@ function updateGrid() {
         square.className = 'day-square';
         square.style.backgroundColor = i < daysElapsed ? '#2ecc71' : '#e74c3c';
         
-        // Add tooltip
         const date = new Date(creationDate);
         date.setDate(date.getDate() + i);
         square.title = date.toDateString();

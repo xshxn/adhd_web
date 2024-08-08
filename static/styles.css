@@ -33,7 +33,7 @@ h1 {
 }
 
 .tool-card {
-    flex: 0 1 calc(20% - 2rem); /* Adjust the percentage based on how many cards you want per row */
+    flex: 0 1 calc(20% - 2rem); 
     min-width: 200px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

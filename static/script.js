@@ -8,10 +8,9 @@ const tools = [
 const toolsGrid = document.getElementById('toolsGrid');
 
 function getRandomDarkColor() {
-    // Generate a random hue
     const hue = Math.floor(Math.random() * 360);
-    // Use a low lightness value to ensure dark colors
-    const lightness = Math.floor(Math.random() * 20) + 10; // 10-30% lightness
+    
+    const lightness = Math.floor(Math.random() * 20) + 10; 
     return `hsl(${hue}, 70%, ${lightness}%)`;
 }
 
