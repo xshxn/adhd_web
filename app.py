@@ -14,16 +14,6 @@ from PIL import Image
 import random
 
 load_dotenv()
-PIXEL_SIZE = 10
-
-HABIT_IMAGES = [
-    "static/habit_templates/circle.png",
-    "static/habit_templates/star.png",
-    "static/habit_templates/heart.png",
-    "static/habit_templates/cloud.png",
-    "static/habit_templates/tree.png",
-]
-
 
 app = Flask(__name__, static_folder='static', template_folder='.')
 
